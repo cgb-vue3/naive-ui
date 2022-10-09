@@ -80,11 +80,11 @@ export const drawerProps = {
   },
   resizable: Boolean,
   defaultWidth: {
-    type: Number,
+    type: [Number, String] as PropType<string | number>,
     default: 251
   },
   defaultHeight: {
-    type: Number,
+    type: [Number, String] as PropType<string | number>,
     default: 251
   },
   onUpdateWidth: [Function, Array] as PropType<
@@ -236,7 +236,7 @@ export default defineComponent({
       if (onHide && !show) call(onHide, show)
     }
     provide(drawerInjectionKey, {
-      isMountedRef: isMountedRef,
+      isMountedRef,
       mergedThemeRef: themeRef,
       mergedClsPrefixRef,
       doUpdateShow,

@@ -1,5 +1,12 @@
-import { h, defineComponent, computed, CSSProperties, Fragment } from 'vue'
-import { useConfig, useTheme, useThemeClass } from '../../_mixins'
+import {
+  h,
+  defineComponent,
+  computed,
+  CSSProperties,
+  Fragment,
+  PropType
+} from 'vue'
+import { useConfig, useTheme, useThemeClass, useRtl } from '../../_mixins'
 import type { ExtractPublicPropTypes } from '../../_utils'
 import type { ThemeProps } from '../../_mixins'
 import { thingLight } from '../styles'
@@ -11,11 +18,10 @@ export const thingProps = {
   title: String,
   titleExtra: String,
   description: String,
+  descriptionStyle: [String, Object] as PropType<string | CSSProperties>,
   content: String,
-  contentIndented: {
-    type: Boolean,
-    default: false
-  }
+  contentStyle: [String, Object] as PropType<string | CSSProperties>,
+  contentIndented: Boolean
 }
 
 export type ThingProps = ExtractPublicPropTypes<typeof thingProps>
@@ -24,7 +30,8 @@ export default defineComponent({
   name: 'Thing',
   props: thingProps,
   setup (props, { slots }) {
-    const { mergedClsPrefixRef, inlineThemeDisabled } = useConfig(props)
+    const { mergedClsPrefixRef, inlineThemeDisabled, mergedRtlRef } =
+      useConfig(props)
     const themeRef = useTheme(
       'Thing',
       '-thing',
@@ -33,6 +40,7 @@ export default defineComponent({
       props,
       mergedClsPrefixRef
     )
+    const rtlEnabledRef = useRtl('Thing', mergedRtlRef, mergedClsPrefixRef)
     const cssVarsRef = computed(() => {
       const {
         self: { titleTextColor, textColor, titleFontWeight, fontSize },
@@ -52,10 +60,15 @@ export default defineComponent({
 
     return () => {
       const { value: mergedClsPrefix } = mergedClsPrefixRef
+      const rtlEnabled = rtlEnabledRef ? rtlEnabledRef.value : false
       themeClassHandle?.onRender?.()
       return (
         <div
-          class={[`${mergedClsPrefix}-thing`, themeClassHandle?.themeClass]}
+          class={[
+            `${mergedClsPrefix}-thing`,
+            themeClassHandle?.themeClass,
+            rtlEnabled && `${mergedClsPrefix}-thing--rtl`
+          ]}
           style={
             inlineThemeDisabled
               ? undefined
@@ -100,7 +113,10 @@ export default defineComponent({
                       ) : null}
                     </div>
                     {slots.description || props.description ? (
-                      <div class={`${mergedClsPrefix}-thing-main__description`}>
+                      <div
+                        class={`${mergedClsPrefix}-thing-main__description`}
+                        style={props.descriptionStyle}
+                      >
                         {slots.description
                           ? slots.description()
                           : props.description}
@@ -131,7 +147,10 @@ export default defineComponent({
                   </div>
                     ) : null}
                 {slots.description || props.description ? (
-                  <div class={`${mergedClsPrefix}-thing-main__description`}>
+                  <div
+                    class={`${mergedClsPrefix}-thing-main__description`}
+                    style={props.descriptionStyle}
+                  >
                     {slots.description
                       ? slots.description()
                       : props.description}
@@ -140,7 +159,10 @@ export default defineComponent({
               </>
                 )}
             {slots.default || props.content ? (
-              <div class={`${mergedClsPrefix}-thing-main__content`}>
+              <div
+                class={`${mergedClsPrefix}-thing-main__content`}
+                style={props.contentStyle}
+              >
                 {slots.default ? slots.default() : props.content}
               </div>
             ) : null}

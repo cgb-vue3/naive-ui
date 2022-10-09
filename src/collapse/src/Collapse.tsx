@@ -198,10 +198,13 @@ export default defineComponent({
           titleFontWeight,
           dividerColor,
           titleTextColor,
+          titleTextColorDisabled,
           textColor,
           arrowColor,
           fontSize,
-          titleFontSize
+          titleFontSize,
+          arrowColorDisabled,
+          itemMargin
         }
       } = themeRef.value
       return {
@@ -211,8 +214,11 @@ export default defineComponent({
         '--n-divider-color': dividerColor,
         '--n-title-font-size': titleFontSize,
         '--n-title-text-color': titleTextColor,
+        '--n-title-text-color-disabled': titleTextColorDisabled,
         '--n-title-font-weight': titleFontWeight,
-        '--n-arrow-color': arrowColor
+        '--n-arrow-color': arrowColor,
+        '--n-arrow-color-disabled': arrowColorDisabled,
+        '--n-item-margin': itemMargin
       }
     })
     const themeClassHandle = inlineThemeDisabled

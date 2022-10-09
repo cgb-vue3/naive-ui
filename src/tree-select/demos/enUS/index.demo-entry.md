@@ -41,7 +41,8 @@ debug.vue
 | filter | `(pattern: string, option: TreeSelectOption) => boolean` | - | Filter function. |  |
 | key-field | `string` | `'key'` | The key field used for `TreeSelectOption`. |  |
 | label-field | `string` | `'label'` | The label field used for `TreeSelectOption`. |  |
-| loading | `boolean` | `false` | Whether it's loading. | NEXT_VETSION |
+| disabled-field | `string` | `'disabled'` | The disabled field used for `TreeSelectOption`. | 2.32.2 |
+| loading | `boolean` | `false` | Whether it's loading. | 2.28.3 |
 | max-tag-count | `number \| 'responsive'` | `undefined` | Maximum number of selected options to show before the list is truncated. `'responsive'` will keep all of the selected options in one row. |  |
 | menu-props | `HTMLAttributes` | `undefined` | The menu's dom props. | 2.22.0 |
 | multiple | `boolean` | `false` | Allow selecting multiple options. |  |
@@ -57,7 +58,7 @@ debug.vue
 | separator | `string` | `' / '` | Option value separator. |  |
 | show-path | `boolean` | `false` | Whether to also show the hierarchy of selected nodes in the label. |  |
 | size | `'small' \| 'medium' \| 'large'` | `'medium'` | Component size. |  |
-| status | `'success' \| 'warning' \| 'error'` | `undefined` | Validaiton status. | 2.27.0 |
+| status | `'success' \| 'warning' \| 'error'` | `undefined` | Validation status. | 2.27.0 |
 | to | `string \| HTMLElement \| false` | `body` | Container node of the menu. `false` will keep it not detached. |  |
 | value | `string \| number \| Array<string \| number> \| null>` | `undefined` | Selected key (or keys when multiple). |  |
 | virtual-scroll | `boolean` | `true` | Whether to enable virtual scrolling. |  |

@@ -1,5 +1,5 @@
 import { defineComponent, computed, h } from 'vue'
-import { useConfig, useTheme, useThemeClass } from '../../_mixins'
+import { useConfig, useTheme, useThemeClass, useRtl } from '../../_mixins'
 import type { ThemeProps } from '../../_mixins'
 import { resolveWrappedSlot } from '../../_utils'
 import type { ExtractPublicPropTypes } from '../../_utils'
@@ -20,7 +20,8 @@ export default defineComponent({
   name: 'Statistic',
   props: statisticProps,
   setup (props) {
-    const { mergedClsPrefixRef, inlineThemeDisabled } = useConfig(props)
+    const { mergedClsPrefixRef, inlineThemeDisabled, mergedRtlRef } =
+      useConfig(props)
     const themeRef = useTheme(
       'Statistic',
       '-statistic',
@@ -29,10 +30,12 @@ export default defineComponent({
       props,
       mergedClsPrefixRef
     )
+    const rtlEnabledRef = useRtl('Statistic', mergedRtlRef, mergedClsPrefixRef)
     const cssVarsRef = computed(() => {
       const {
         self: {
           labelFontWeight,
+          valueFontSize,
           valueFontWeight,
           valuePrefixTextColor,
           labelTextColor,
@@ -48,6 +51,7 @@ export default defineComponent({
         '--n-label-font-weight': labelFontWeight,
         '--n-label-text-color': labelTextColor,
         '--n-value-font-weight': valueFontWeight,
+        '--n-value-font-size': valueFontSize,
         '--n-value-prefix-text-color': valuePrefixTextColor,
         '--n-value-suffix-text-color': valueSuffixTextColor,
         '--n-value-text-color': valueTextColor
@@ -57,6 +61,7 @@ export default defineComponent({
       ? useThemeClass('statistic', undefined, cssVarsRef, props)
       : undefined
     return {
+      rtlEnabled: rtlEnabledRef,
       mergedClsPrefix: mergedClsPrefixRef,
       cssVars: inlineThemeDisabled ? undefined : cssVarsRef,
       themeClass: themeClassHandle?.themeClass,
@@ -76,7 +81,11 @@ export default defineComponent({
     this.onRender?.()
     return (
       <div
-        class={[`${mergedClsPrefix}-statistic`, this.themeClass]}
+        class={[
+          `${mergedClsPrefix}-statistic`,
+          this.themeClass,
+          this.rtlEnabled && `${mergedClsPrefix}-statistic--rtl`
+        ]}
         style={this.cssVars as any}
       >
         {resolveWrappedSlot(labelSlot, (children) => (

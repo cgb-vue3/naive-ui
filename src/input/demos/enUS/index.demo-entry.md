@@ -45,13 +45,14 @@ pattern.vue
 | passively-activated | `boolean` | `false` | Whether to passively activate the input. |  |
 | placeholder | `string \| [string, string]` | `undefined` | Placeholder of input. When `pair` is `true`, this is an array. |  |
 | readonly | `boolean` | `false` | Set the readonly state. |  |
+| render-count | `(props: { value: string }) => void` | `undefined` | Render function of word count. | 2.32.2 |
 | round | `boolean` | `false` | Use a rounded input style. |  |
 | rows | `number` | `3` | Rows property for when the input is of type `textarea`. |  |
 | separator | `string` | `undefined` | The separator between pairwise inputs. |  |
 | show-count | `boolean` | `false` | Whether to show the word count. |  |
 | show-password-on | `'click' \| 'mousedown'` | `undefined` | The event to show the password. |  |
-| size | `'small' \| 'medium' \| 'large'` | `'medium'` | Input size. |  |
-| status | `'success' \| 'warning' \| 'error'` | `undefined` | Validaiton status. | 2.25.0 |
+| size | `'tiny' \| 'small' \| 'medium' \| 'large'` | `'medium'` | Input size. |  |
+| status | `'success' \| 'warning' \| 'error'` | `undefined` | Validation status. | 2.25.0 |
 | type | `'text' \| 'password' \| 'textarea'` | `'text'` | Input type. |  |
 | value | `string \| [string, string] \| null` | `undefined` | Manually set the input value. When `pair` is `true`, this is an array. |  |
 | on-blur | `() => void` | `undefined` | Callback triggered when the input is blurred. |  |
@@ -66,7 +67,7 @@ pattern.vue
 | Name | Parameters | Description | Version |
 | --- | --- | --- | --- |
 | clear-icon | `()` | Custom clear icon. | 2.29.0 |
-| count | `(value: string)` | Word count. |  |
+| count | `(props: { value: string })` | Word count. |  |
 | password-invisible-icon | `()` | Password toggle icon when password is invisible. | 2.27.0 |
 | password-visible-icon | `()` | Password toggle icon when password is visible. | 2.27.0 |
 | prefix | `()` | Prefix content slot. |  |
@@ -87,8 +88,9 @@ pattern.vue
 
 ### Input Methods
 
-| Name   | Type         | Description               |
-| ------ | ------------ | ------------------------- |
-| blur   | `() => void` | Blur the input element.   |
-| focus  | `() => void` | Focus the input element.  |
-| select | `() => void` | Select the input element. |
+| Name | Type | Description | Version |
+| --- | --- | --- | --- |
+| blur | `() => void` | Blur the input element. |  |
+| focus | `() => void` | Focus the input element. |  |
+| select | `() => void` | Select the input element. |  |
+| scrollTo | `(options: { left?: number, top?: number, behavior?: 'auto' \| 'smooth' }) => void` | Scroll To. | 2.32.0 |

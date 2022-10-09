@@ -29,12 +29,13 @@ status.vue
 | get-show | `(value: string) => boolean` | `undefined` | Use the input to determine whether to show options on focus. |  |
 | input-props | `HTMLInputAttributes` | `undefined` | The attributes of input element in autocomplete. |  |
 | loading | `boolean` | `false` | Whether to show a loading status. |  |
+| menu-props | `HTMLAttributes` | `undefined` | The menu's dom props. | 2.32.2 |
 | options | `Array<string \| AutoCompleteOption \| AutoCompleteGroupOption>` | `[]` | Options to autocomplete from. |  |
 | placeholder | `string` | `'Please Input'` | Autocomplete's placeholder. |  |
 | placement | `'top-start' \| 'top' \| 'top-end' \| 'right-start' \| 'right' \| 'right-end' \| 'bottom-start' \| 'bottom' \| 'bottom-end' \| 'left-start' \| 'left' \| 'left-end'` | `'bottom-start'` | Autocomplete's placement. | 2.25.0 |
 | render-label | `(option: SelectOption \| SelectGroupOption, selected: boolean) => VNodeChild` | `undefined` | Render function for each option label. | 2.24.0 |
 | render-option | `(info: { node: VNode, option: SelectOption \| SelectGroupOption, selected: boolean }) => VNodeChild` | `undefined` | Render function for each option. | 2.24.0 |
-| status | `'success' \| 'warning' \| 'error'` | `undefined` | Validaiton status. | 2.27.0 |
+| status | `'success' \| 'warning' \| 'error'` | `undefined` | Validation status. | 2.27.0 |
 | size | `'small' \| 'medium' \| 'large'` | `'medium'` | Autocomplete size. |  |
 | to | `string \| HTMLElement \| false` | `body` | Container node of the menu. `false` will keep it not detached. |  |
 | value | `string` | `undefined` | Input of autocomplete. |  |
@@ -57,7 +58,7 @@ status.vue
 | -------- | ------------------------------------- | ----------------------- |
 | children | `Array<string \| AutoCompleteOption>` | Group children options. |
 | label    | `string`                              | Group label.            |
-| key      | `key`                                 | Unique group key.       |
+| key      | `string \| number`                    | Unique group key.       |
 | type     | `'group'`                             | Required group type.    |
 
 ### AutoComplete Slots

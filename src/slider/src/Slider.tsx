@@ -62,6 +62,10 @@ export const sliderProps = {
     default: undefined
   },
   formatTooltip: Function as PropType<(value: number) => string | number>,
+  keyboard: {
+    type: Boolean,
+    default: true
+  },
   min: {
     type: Number,
     default: 0
@@ -362,7 +366,7 @@ export default defineComponent({
       markValues = markValuesRef.value,
       buffer?: number
     ): ClosestMark | null {
-      if (!markValues || !markValues.length) return null
+      if (!markValues?.length) return null
       let closestMark: ClosestMark | null = null
       let index = -1
       while (++index < markValues.length) {
@@ -401,7 +405,7 @@ export default defineComponent({
 
     // dom event handle
     function handleRailKeyDown (e: KeyboardEvent): void {
-      if (mergedDisabledRef.value) return
+      if (mergedDisabledRef.value || !props.keyboard) return
       const { vertical, reverse } = props
       switch (e.key) {
         case 'ArrowUp':
@@ -536,6 +540,7 @@ export default defineComponent({
     const cssVarsRef = computed(() => {
       const {
         self: {
+          markFontSize,
           railColor,
           railColorHover,
           fillColor,
@@ -586,7 +591,8 @@ export default defineComponent({
         '--n-rail-color': railColor,
         '--n-rail-color-hover': railColorHover,
         '--n-rail-height': railHeight,
-        '--n-rail-width-vertical': railWidthVertical
+        '--n-rail-width-vertical': railWidthVertical,
+        '--n-mark-font-size': markFontSize
       }
     })
     const themeClassHandle = inlineThemeDisabled

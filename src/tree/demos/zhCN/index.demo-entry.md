@@ -26,6 +26,7 @@ change-debug.vue
 scrollbar-debug.vue
 scroll-debug.vue
 rtl-debug.vue
+expand-debug.vue
 ```
 
 ## API
@@ -37,6 +38,7 @@ rtl-debug.vue
 | accordion | `boolean` | `false` | 是否使用手风琴展开模式 | 2.31.0 |
 | allow-checking-not-loaded | `boolean` | `false` | 是否允许级联勾选还没有完全加载的节点。如果你要用这个属性，请记住 `checked-keys` 可能是不完整的，并且请注意勾选行为和后端计算逻辑的一致性，尤其是有禁用节点的情况下 | 2.28.1 |
 | allow-drop | `(info: { dropPosition: DropPosition, node: TreeOption, phase: 'drag' \| 'drop' }) => boolean` | 一个不允许 drop 在叶节点内部的函数 | 是否允许 drop |  |
+| animated | `boolean` | `true` | 是否有展开动画 | 2.33.4 |
 | block-line | `boolean` | `false` | 节点整行撑开 |  |
 | block-node | `boolean` | `false` | 节点名称整行撑开 |  |
 | cancelable | `boolean` | `true` | 选中之后是否允许取消 |  |
@@ -58,8 +60,10 @@ rtl-debug.vue
 | expanded-keys | `Array<string \| number>` | `undefined` | 如果设定则展开受控 |  |
 | filter | `(pattern: string, node: TreeOption) => boolean` | 一个简单的字符串过滤算法 | 基于 pattern 指定过滤节点的函数 |  |
 | indeterminate-keys | `Array<string \| number>` | `undefined` | 部分选中选项的 key |  |
+| keyboard | `boolean` | `true` | 是否支持键盘操作 | 2.32.2 |
 | key-field | `string` | `'key'` | 替代 `TreeOption` 中的 key 字段名 |  |
 | label-field | `string` | `'label'` | 替代 `TreeOption` 中的 label 字段名 |  |
+| disabled-field | `string` | `'disabled'` | 替代 `TreeOption` 中的 disabled 字段名 | 2.32.2 |
 | node-props | `(info: { option: TreeOption }) => HTMLAttributes` | `undefined` | 节点的 HTML 属性 | 2.25.0 |
 | multiple | `boolean` | `false` | 是否允许节点多选 |  |
 | on-load | `(node: TreeOption) => Promise<void>` | `undefined` | 异步加载数据的回调函数 |  |
@@ -78,10 +82,10 @@ rtl-debug.vue
 | on-dragleave | `(data: { node: TreeOption, event: DragEvent }) => void` | `undefined` | 拖拽一个节点，该节点离开其它节点后的回调函数 |  |
 | on-dragstart | `(data: { node: TreeOption, event: DragEvent }) => void` | `undefined` | 开始拖拽某一个节点的回调函数 |  |
 | on-drop | `(data: { node: TreeOption, dragNode: TreeOption, dropPosition: 'before' \| 'inside' \| 'after', event: DragEvent }) => void` | `undefined` | 节点完成拖拽动作后的回调函数 |  |
-| on-update:checked-keys | `(keys: Array<string \| number>, option: Array<TreeOption \| null>)) => void` | `undefined` | 节点勾选项发生变化时的回调函数 |  |
-| on-update:indeterminate-keys | `(keys: Array<string \| number>, option: Array<TreeOption \| null>)) => void` | `undefined` | 节点部分勾选项发生变化时的回调函数 |  |
-| on-update:expanded-keys | `(keys: Array<string \| number>, option: Array<TreeOption \| null>)) => void` | `undefined` | 节点展开项发生变化时的回调函数 |  |
-| on-update:selected-keys | `(keys: Array<string \| number>, option: Array<TreeOption \| null>)) => void` | `undefined` | 节点选中项发生变化时的回调函数 |  |
+| on-update:checked-keys | `(keys: Array<string \| number>, option: Array<TreeOption \| null>) => void` | `undefined` | 节点勾选项发生变化时的回调函数 |  |
+| on-update:indeterminate-keys | `(keys: Array<string \| number>, option: Array<TreeOption \| null>) => void` | `undefined` | 节点部分勾选项发生变化时的回调函数 |  |
+| on-update:expanded-keys | `(keys: Array<string \| number>, option: Array<TreeOption \| null>) => void` | `undefined` | 节点展开项发生变化时的回调函数 |  |
+| on-update:selected-keys | `(keys: Array<string \| number>, option: Array<TreeOption \| null>) => void` | `undefined` | 节点选中项发生变化时的回调函数 |  |
 
 ### TreeOption Properties
 
@@ -95,3 +99,11 @@ rtl-debug.vue
 | isLeaf? | `boolean` | 节点是否是叶节点，在异步展开状态下是必须的 |
 | prefix? | `string \| (() => VNodeChild)` | 节点的前缀 |
 | suffix? | `string \| (() => VNodeChild)` | 节点的后缀 |
+
+## Methods
+
+### Tree Methods
+
+| 名称 | 参数 | 说明 | 版本 |
+| --- | --- | --- | --- |
+| scrollTo | `(options: { key: string \| number })` | 在虚拟滚动模式下滚动到某个节点 | 2.32.2 |

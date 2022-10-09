@@ -8,8 +8,11 @@ import { dialogProps, dialogPropKeys } from './dialogProps'
 
 export const exposedDialogEnvProps = {
   ...dialogProps,
+  onAfterEnter: Function as PropType<() => void>,
+  onAfterLeave: Function as PropType<() => void>,
   blockScroll: { type: Boolean, default: true },
   closeOnEsc: { type: Boolean, default: true },
+  onEsc: Function as PropType<() => void>,
   autoFocus: {
     type: Boolean,
     default: true
@@ -47,7 +50,9 @@ export const NDialogEnvironment = defineComponent({
   setup (props) {
     const showRef = ref(true)
     function handleAfterLeave (): void {
-      props.onInternalAfterLeave(props.internalKey)
+      const { onInternalAfterLeave, internalKey, onAfterLeave } = props
+      if (onInternalAfterLeave) onInternalAfterLeave(internalKey)
+      if (onAfterLeave) onAfterLeave()
     }
     function handlePositiveClick (e: MouseEvent): void {
       const { onPositiveClick } = props
@@ -89,6 +94,12 @@ export const NDialogEnvironment = defineComponent({
         maskClosable && hide()
       }
     }
+    function handleEsc (): void {
+      const { onEsc } = props
+      if (onEsc) {
+        onEsc()
+      }
+    }
     function hide (): void {
       showRef.value = false
     }
@@ -103,7 +114,8 @@ export const NDialogEnvironment = defineComponent({
       handleCloseClick,
       handleNegativeClick,
       handlePositiveClick,
-      handleMaskClick
+      handleMaskClick,
+      handleEsc
     }
   },
   render () {
@@ -114,6 +126,7 @@ export const NDialogEnvironment = defineComponent({
       handleCloseClick,
       handleAfterLeave,
       handleMaskClick,
+      handleEsc,
       to,
       maskClosable,
       show
@@ -123,8 +136,10 @@ export const NDialogEnvironment = defineComponent({
         show={show}
         onUpdateShow={handleUpdateShow}
         onMaskClick={handleMaskClick}
+        onEsc={handleEsc}
         to={to}
         maskClosable={maskClosable}
+        onAfterEnter={this.onAfterEnter}
         onAfterLeave={handleAfterLeave}
         closeOnEsc={this.closeOnEsc}
         blockScroll={this.blockScroll}

@@ -23,7 +23,7 @@ import {
 import { useIsMounted, useMergedState } from 'vooks'
 import { clickoutside } from 'vdirs'
 import { createTreeMate, CheckStrategy } from 'treemate'
-import { happensIn } from 'seemly'
+import { getPreciseEventTarget, happensIn } from 'seemly'
 import type { FormValidationStatus } from '../../form/src/interface'
 import { Key, InternalTreeInst } from '../../tree/src/interface'
 import type { SelectBaseOption, SelectOption } from '../../select/src/interface'
@@ -221,7 +221,11 @@ export default defineComponent({
     const dataTreeMateRef = computed(() =>
       createTreeMate<TreeSelectOption>(
         props.options,
-        createTreeMateOptions(props.keyField, props.childrenField)
+        createTreeMateOptions(
+          props.keyField,
+          props.childrenField,
+          props.disabledField
+        )
       )
     )
     const { value: initMergedValue } = mergedValueRef
@@ -409,7 +413,11 @@ export default defineComponent({
     }
     function handleMenuClickoutside (e: MouseEvent): void {
       if (mergedShowRef.value) {
-        if (!triggerInstRef.value?.$el.contains(e.target as Node)) {
+        if (
+          !triggerInstRef.value?.$el.contains(
+            getPreciseEventTarget(e) as Node | null
+          )
+        ) {
           // outside select, don't need to return focus
           closeMenu()
         }
@@ -436,20 +444,18 @@ export default defineComponent({
       const options = getOptionsByKeys(keys)
       if (props.multiple) {
         doUpdateValue(keys, options)
+        if (props.filterable) {
+          focusSelectionInput()
+          if (props.clearFilterAfterSelect) patternRef.value = ''
+        }
       } else {
         keys.length
           ? doUpdateValue(keys[0], options[0] || null)
           : doUpdateValue(null, null)
         closeMenu()
-        if (!props.filterable) {
-          // Currently it is not necessary. However if there is an action slot,
-          // it will be useful. So just leave it here.
-          focusSelection()
-        }
-      }
-      if (props.filterable) {
-        focusSelectionInput()
-        if (props.clearFilterAfterSelect) patternRef.value = ''
+        // Currently it is not necessary. However if there is an action slot,
+        // it will be useful. So just leave it here.
+        focusSelection()
       }
     }
     function handleUpdateIndeterminateKeys (keys: Key[]): void {
@@ -809,6 +815,7 @@ export default defineComponent({
                                 cancelable={multiple}
                                 labelField={this.labelField}
                                 keyField={this.keyField}
+                                disabledField={this.disabledField}
                                 childrenField={this.childrenField}
                                 theme={mergedTheme.peers.Tree}
                                 themeOverrides={mergedTheme.peerOverrides.Tree}

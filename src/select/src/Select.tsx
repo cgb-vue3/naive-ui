@@ -13,7 +13,7 @@ import {
   HTMLAttributes,
   watchEffect
 } from 'vue'
-import { happensIn } from 'seemly'
+import { getPreciseEventTarget, happensIn } from 'seemly'
 import { createTreeMate, TreeNode } from 'treemate'
 import {
   VBinder,
@@ -26,7 +26,8 @@ import { useIsMounted, useMergedState, useCompitable } from 'vooks'
 import { clickoutside } from 'vdirs'
 import {
   RenderLabel,
-  RenderOption
+  RenderOption,
+  NodeProps
 } from '../../_internal/select-menu/src/interface'
 import { RenderTag } from '../../_internal/selection/src/interface'
 import type { FormValidationStatus } from '../../form/src/interface'
@@ -161,6 +162,8 @@ export const selectProps = {
   MaybeArray<OnUpdateValue> | undefined
   >,
   inputProps: Object as PropType<InputHTMLAttributes>,
+  nodeProps: Function as PropType<NodeProps>,
+  ignoreComposition: { type: Boolean, default: true },
   // for jsx
   onUpdateValue: [Function, Array] as PropType<
   MaybeArray<OnUpdateValue> | undefined
@@ -193,7 +196,7 @@ export const selectProps = {
     default: true
   },
   status: String as PropType<FormValidationStatus>,
-  internalShowCheckmark: {
+  showCheckmark: {
     type: Boolean,
     default: true
   },
@@ -499,6 +502,8 @@ export default defineComponent({
         if (!props.filterable) {
           // already focused, don't need to return focus
           closeMenu()
+        } else {
+          focusSelectionInput()
         }
       }
     }
@@ -531,7 +536,11 @@ export default defineComponent({
     }
     function handleMenuClickOutside (e: MouseEvent): void {
       if (mergedShowRef.value) {
-        if (!triggerRef.value?.$el.contains(e.target as Node)) {
+        if (
+          !triggerRef.value?.$el.contains(
+            getPreciseEventTarget(e) as Node | null
+          )
+        ) {
           // outside select, don't need to return focus
           closeMenu()
         }
@@ -700,7 +709,7 @@ export default defineComponent({
           }
         // eslint-disable-next-line no-fallthrough
         case 'Enter':
-          if (!triggerRef.value?.isCompositing) {
+          if (!triggerRef.value?.isComposing) {
             if (mergedShowRef.value) {
               const pendingTmNode = menuRef.value?.getPendingTmNode()
               if (pendingTmNode) {
@@ -891,6 +900,7 @@ export default defineComponent({
                       onPatternBlur={this.onTriggerInputBlur}
                       onPatternFocus={this.onTriggerInputFocus}
                       onResize={this.handleTriggerOrMenuResize}
+                      ignoreComposition={this.ignoreComposition}
                     >
                       {{
                         arrow: () => [this.$slots.arrow?.()]
@@ -946,6 +956,7 @@ export default defineComponent({
                               labelField={this.labelField}
                               valueField={this.valueField}
                               autoPending={true}
+                              nodeProps={this.nodeProps}
                               theme={this.mergedTheme.peers.InternalSelectMenu}
                               themeOverrides={
                                 this.mergedTheme.peerOverrides
@@ -966,7 +977,7 @@ export default defineComponent({
                               onTabOut={this.handleMenuTabOut}
                               onMousedown={this.handleMenuMousedown}
                               show={this.mergedShow}
-                              showCheckmark={this.internalShowCheckmark}
+                              showCheckmark={this.showCheckmark}
                               resetMenuOnOptionsChange={
                                 this.resetMenuOnOptionsChange
                               }

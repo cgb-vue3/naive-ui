@@ -19,7 +19,7 @@ import { VBinder, VTarget, VFollower, FollowerPlacement } from 'vueuc'
 import { clickoutside } from 'vdirs'
 import { format, getTime, isValid } from 'date-fns/esm'
 import { useIsMounted, useMergedState } from 'vooks'
-import { happensIn } from 'seemly'
+import { getPreciseEventTarget, happensIn } from 'seemly'
 import type { Size as TimePickerSize } from '../../time-picker/src/interface'
 import type { TimePickerProps } from '../../time-picker/src/TimePicker'
 import type { FormValidationStatus } from '../../form/src/interface'
@@ -538,7 +538,7 @@ export default defineComponent({
     function handleClickOutside (e: MouseEvent): void {
       if (
         mergedShowRef.value &&
-        !triggerElRef.value?.contains(e.target as Node)
+        !triggerElRef.value?.contains(getPreciseEventTarget(e) as Node | null)
       ) {
         closeCalendar({
           returnFocus: false
@@ -777,8 +777,8 @@ export default defineComponent({
       } = themeRef.value
       return {
         '--n-bezier': cubicBezierEaseInOut,
-        '--n-icon-color': iconColor,
-        '--n-icon-color-disabled': iconColorDisabled
+        '--n-icon-color-override': iconColor,
+        '--n-icon-color-disabled-override': iconColorDisabled
       }
     })
     const triggerThemeClassHandle = inlineThemeDisabled
@@ -902,7 +902,14 @@ export default defineComponent({
       }
     })
     const themeClassHandle = inlineThemeDisabled
-      ? useThemeClass('date-picker', undefined, cssVarsRef, props)
+      ? useThemeClass(
+        'date-picker',
+        computed(() => {
+          return props.type
+        }),
+        cssVarsRef,
+        props
+      )
       : undefined
 
     return {
@@ -980,21 +987,25 @@ export default defineComponent({
     const renderPanel = (): VNode => {
       const { type } = this
       return type === 'datetime' ? (
-        <DatetimePanel {...commonPanelProps} />
+        <DatetimePanel {...commonPanelProps}>{$slots}</DatetimePanel>
       ) : type === 'daterange' ? (
         <DaterangePanel
           {...commonPanelProps}
           defaultCalendarStartTime={this.defaultCalendarStartTime}
           defaultCalendarEndTime={this.defaultCalendarEndTime}
           bindCalendarMonths={this.bindCalendarMonths}
-        />
+        >
+          {$slots}
+        </DaterangePanel>
       ) : type === 'datetimerange' ? (
         <DatetimerangePanel
           {...commonPanelProps}
           defaultCalendarStartTime={this.defaultCalendarStartTime}
           defaultCalendarEndTime={this.defaultCalendarEndTime}
           bindCalendarMonths={this.bindCalendarMonths}
-        />
+        >
+          {$slots}
+        </DatetimerangePanel>
       ) : type === 'month' || type === 'year' || type === 'quarter' ? (
         <MonthPanel {...commonPanelProps} type={type} key={type} />
       ) : type === 'monthrange' ||
@@ -1002,7 +1013,7 @@ export default defineComponent({
         type === 'quarterrange' ? (
         <MonthRangePanel {...commonPanelProps} type={type} />
           ) : (
-        <DatePanel {...commonPanelProps} />
+        <DatePanel {...commonPanelProps}>{$slots}</DatePanel>
           )
     }
     if (this.panel) {

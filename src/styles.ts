@@ -9,6 +9,7 @@ export { badgeDark, badgeRtl as unstableBadgeRtl } from './badge/styles'
 export { breadcrumbDark } from './breadcrumb/styles'
 export { buttonDark, buttonRtl as unstableButtonRtl } from './button/styles'
 export { notificationRtl as unstableNotificationRtl } from './notification/styles'
+export { messageRtl as unstableMessageRtl } from './message/styles'
 export {
   buttonGroupDark,
   buttonGroupRtl as unstableButtonGroupRtl
@@ -30,7 +31,7 @@ export { datePickerDark } from './date-picker/styles'
 export { descriptionsDark } from './descriptions/styles'
 export { dialogDark } from './dialog/styles'
 export { dividerDark } from './divider/styles'
-export { drawerDark } from './drawer/styles'
+export { drawerDark, drawerRtl as unstableDrawerRtl } from './drawer/styles'
 export { dropdownDark } from './dropdown/styles'
 export {
   dynamicInputDark,
@@ -48,7 +49,7 @@ export {
   inputNumberRtl as unstableInputNumberRtl
 } from './input-number/styles'
 export { layoutDark } from './layout/styles'
-export { listDark } from './list/styles'
+export { listDark, listRtl as unstableListRtl } from './list/styles'
 export { loadingBarDark } from './loading-bar/styles'
 export { logDark } from './log/styles'
 export { mentionDark } from './mention/styles'
@@ -72,13 +73,16 @@ export { selectDark } from './select/styles'
 export { sliderDark } from './slider/styles'
 export { spaceDark, spaceRtl as unstableSpaceRtl } from './space/styles'
 export { spinDark } from './spin/styles'
-export { statisticDark } from './statistic/styles'
-export { stepsDark } from './steps/styles'
+export {
+  statisticDark,
+  statisticRtl as unstableStatisticRtl
+} from './statistic/styles'
+export { stepsDark, stepsRtl as unstableStepsRtl } from './steps/styles'
 export { switchDark } from './switch/styles'
 export { tableDark, tableRtl as unstableTableRtl } from './table/styles'
 export { tabsDark } from './tabs/styles'
 export { tagDark, tagRtl as unstableTagRtl } from './tag/styles'
-export { thingDark } from './thing/styles'
+export { thingDark, thingRtl as unstableThingRtl } from './thing/styles'
 export { timePickerDark } from './time-picker/styles'
 export { timelineDark } from './timeline/styles'
 export { tooltipDark } from './tooltip/styles'
@@ -88,6 +92,7 @@ export { treeSelectDark } from './tree-select/styles'
 export { typographyDark } from './typography/styles'
 export { uploadDark } from './upload/styles'
 export { watermarkDark } from './watermark/styles'
+export { rowRtl as unstableRowRtl } from './legacy-grid/styles'
 
 // danger zone, internal styles
 export { scrollbarDark } from './_internal/scrollbar/styles'

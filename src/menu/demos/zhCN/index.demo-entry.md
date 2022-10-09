@@ -19,6 +19,9 @@ accordion.vue
 router-link.vue
 customize-field.vue
 expand-selected-option.vue
+show.vue
+debug.vue
+show-debug.vue
 ```
 
 ## API
@@ -32,9 +35,10 @@ expand-selected-option.vue
 | collapsed-icon-size | `number` | `24` | 菜单折叠时图标的大小，如果未设定则使用 `icon-size` 代替 |  |
 | collapsed-width | `number` | `48` | 折叠后菜单的宽度 |  |
 | collapsed | `boolean` | `false` | 菜单是否折叠，值在菜单为垂直时有用 |  |
-| default-expand-all | `boolean` | `false` | 是否展开全部菜单 |  |
+| default-expand-all | `boolean` | `false` | 是否展开全部菜单，`options` 为异步获取时，`watch-props` 需要设置为 `['defaultExpandedKeys']` 才会生效 |  |
 | default-expanded-keys | `Array<string>` | `[]` | 在非受控状态下默认展开的子菜单标识符数组 |  |
 | default-value | `string \| null` | `null` | 非受控模式下的默认值 |  |
+| disabled-field | `string` | `'disabled'` | disabled 的字段名 | 2.33.0 |
 | dropdown-placement | `'top-start' \| 'top' \| 'top-end' \| 'right-start' \| 'right' \| 'right-end' \| 'bottom-start' \| 'bottom' \| 'bottom-end' \| 'left-start' \| 'left' \| 'left-end' \| ` | `'top'` | 仅在 `mode='horizontal'` 模式下生效 |  |
 | dropdown-props | `DropdownProps` | `undefined` | 菜单折叠或 `mode='horizontal'` 模式时 Dropdown 的 props，请参考 [Dropdown Props](dropdown#Dropdown-Props) |  |
 | expanded-keys | `Array<string>` | `undefined` | 展开的子菜单标识符数组，如果设定了，菜单的展开将会进入受控状态，`default-expanded-keys` 不会生效 |  |
@@ -58,31 +62,34 @@ expand-selected-option.vue
 
 #### MenuOption Properties
 
-| 名称      | 类型                                   | 说明             |
-| --------- | -------------------------------------- | ---------------- |
-| children? | `Array<MenuOption \| MenuGroupOption>` | 子选项           |
-| disabled? | `boolean`                              | 是否禁用菜单项   |
-| extra?    | `string \| (() => VNodeChild)`         | 菜单项的额外部分 |
-| icon?     | `() => VNode`                          | 菜单项的图标     |
-| key       | `string`                               | 菜单项的标识符   |
-| label     | `string \| (() => VNodeChild)`         | 菜单项的内容     |
+| 名称 | 类型 | 说明 | 版本 |
+| --- | --- | --- | --- |
+| children? | `Array<MenuOption \| MenuGroupOption>` | 子选项 |  |
+| disabled? | `boolean` | 是否禁用菜单项 |  |
+| extra? | `string \| (() => VNodeChild)` | 菜单项的额外部分 |  |
+| icon? | `() => VNode` | 菜单项的图标 |  |
+| key | `string` | 菜单项的标识符 |  |
+| label | `string \| (() => VNodeChild)` | 菜单项的内容 |  |
+| show? | `boolean` | 是否显示菜单项 | 2.32.2 |
 
 #### MenuGroupOption Properties
 
-| 名称     | 类型                                   | 说明                     |
-| -------- | -------------------------------------- | ------------------------ |
-| children | `Array<MenuOption \| MenuGroupOption>` | 子菜单，**必填！**       |
-| key      | `string`                               | 菜单项的标识符           |
-| label    | `string \| (() => VNodeChild)`         | 菜单项的内容             |
-| type     | `'group'`                              | 菜单项的类型，**必填！** |
+| 名称 | 类型 | 说明 | 版本 |
+| --- | --- | --- | --- |
+| children | `Array<MenuOption \| MenuGroupOption>` | 子菜单，**必填！** |  |
+| key | `string` | 菜单项的标识符 |  |
+| label | `string \| (() => VNodeChild)` | 菜单项的内容 |  |
+| show? | `boolean` | 是否显示菜单项 | 2.32.2 |
+| type | `'group'` | 菜单项的类型，**必填！** |  |
 
 #### MenuDividerOption Properties
 
-| 名称  | 类型             | 说明                     |
-| ----- | ---------------- | ------------------------ |
-| key   | `string`         | 菜单项的标识符           |
-| props | `HTMLAttributes` | 分割线的属性             |
-| type  | `'divider'`      | 菜单项的类型，**必填！** |
+| 名称  | 类型             | 说明                     | 版本   |
+| ----- | ---------------- | ------------------------ | ------ |
+| key   | `string`         | 菜单项的标识符           |        |
+| props | `HTMLAttributes` | 分割线的属性             |        |
+| show? | `boolean`        | 是否显示菜单项           | 2.32.2 |
+| type  | `'divider'`      | 菜单项的类型，**必填！** |        |
 
 ### Menu Methods
 

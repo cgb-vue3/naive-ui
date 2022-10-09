@@ -33,6 +33,7 @@ status.vue
 | clear-filter-after-select | `boolean` | `true` | When multiple and filter is true, whether to clear filter keyword after select an option. | 2.25.3 |
 | default-value | `string \| number \| Array<number \| string> \| null` | `null` | Data selected by default if no value is set. |  |
 | disabled | `boolean` | `false` | Whether to disable the cascader. |  |
+| disabled-field | `string` | `'disabled'` | The disabled field in `CascaderOption`. | 2.32.2 |
 | expand-trigger | `'click' \| 'hover'` | `'click'` | If `remote` is set, `'hover'` won't work. |  |
 | filterable | `boolean` | `false` | Note: If `remote` is set, this won't have any effect. |  |
 | filter | `(pattern: string, option: CascaderOption, path: CascaderOption[]) => boolean` | A string based filter algorithm. | Filter function of the cascader. |  |
@@ -42,7 +43,7 @@ status.vue
 | max-tag-count | `number \| 'responsive'` | `undefined` | Max tag count in multiple select mode. `responsive` will keep all the tags in single line. |  |
 | menu-props | `HTMLAttributes` | `undefined` | The menu's dom props. | 2.27.0 |
 | multiple | `boolean` | `false` | Whether to allow multiple options being selected. |  |
-| options | `CascaderOption[]` | required | Options of the cascader. |  |
+| options | `CascaderOption[]` | `[]` | Options of the cascader. |  |
 | placeholder | `string` | `'Please Select'` | Placeholder text. |  |
 | placement | `'top-start' \| 'top' \| 'top-end' \| 'right-start' \| 'right' \| 'right-end' \| 'bottom-start' \| 'bottom' \| 'bottom-end' \| 'left-start' \| 'left' \| 'left-end'` | `'bottom-start'` | Cascader placement. | 2.25.0 |
 | remote | `boolean` | `false` | Whether to obtain data remotely. |  |
@@ -51,7 +52,7 @@ status.vue
 | show | `boolean` | `undefined` | Whether to show the menu. |  |
 | show-path | `boolean` | `true` | Whether to show the selected options as a path. |  |
 | size | `'small' \| 'medium' \| 'large'` | `'medium'` | Cascader size. |  |
-| status | `'success' \| 'warning' \| 'error'` | `undefined` | Validaiton status. | 2.27.0 |
+| status | `'success' \| 'warning' \| 'error'` | `undefined` | Validation status. | 2.27.0 |
 | to | `string \| HTMLElement \| false` | `body` | Container node of the menu. `false` will keep it not detached. |  |
 | value | `string \| number \| Array<number \| string> \| null` | `undefined` | Value of the cascader (if being set manually). |  |
 | virtual-scroll | `boolean` | `true` | Whether to enable virtual scrolling. |  |
@@ -63,18 +64,19 @@ status.vue
 
 #### CascaderOption Properties
 
-| Name      | Type               | Description                          |
-| --------- | ------------------ | ------------------------------------ |
-| label     | `string`           | Label of the option.                 |
-| value     | `string \| number` | Value of the option.                 |
-| disabled? | `boolean`          | Whether this option is disabled.     |
-| children? | `CascaderOption`   | The children options of this option. |
+| Name | Type | Description | Version |
+| --- | --- | --- | --- |
+| label | `string` | Label of the option. |  |
+| value | `string \| number` | Value of the option. |  |
+| disabled? | `boolean` | Whether this option is disabled. |  |
+| children? | `CascaderOption` | The children options of this option. |  |
 
 ### Cascader Slots
 
 | Name | Parameters | Description | Version |
 | --- | --- | --- | --- |
 | action | `()` | Action content displayed in the cascading menu. |  |
+| arrow | `()` | Arrow content displayed in the cascading menu. | 2.32.2 |
 | empty | `()` | Empty state slot for the options cascading menu. | 2.22.0 |
 
 ### Cascader Methods

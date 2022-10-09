@@ -20,7 +20,12 @@ import {
 import { tagInjectionKey } from '../../tag/src/Tag'
 import { useConfig, useTheme, useThemeClass } from '../../_mixins'
 import type { ThemeProps } from '../../_mixins'
-import { createKey, color2Class, resolveWrappedSlot } from '../../_utils'
+import {
+  createKey,
+  color2Class,
+  resolveWrappedSlot,
+  resolveSlot
+} from '../../_utils'
 import type { ExtractPublicPropTypes } from '../../_utils'
 import { avatarLight } from '../styles'
 import type { AvatarTheme } from '../styles'
@@ -49,6 +54,9 @@ export const avatarProps = {
   fallbackSrc: String,
   intersectionObserverOptions: Object as PropType<IntersectionObserverOptions>,
   lazy: Boolean,
+  onLoad: Function as PropType<(e: Event) => void>,
+  renderPlaceholder: Function as PropType<() => VNodeChild>,
+  renderFallback: Function as PropType<() => VNodeChild>,
   /** @deprecated */
   color: String
 } as const
@@ -191,8 +199,6 @@ export default defineComponent({
       )
       : undefined
 
-    const imageRef = ref<HTMLImageElement | null>(null)
-
     const shouldStartLoadingRef = ref(!props.lazy)
 
     onMounted(() => {
@@ -205,7 +211,7 @@ export default defineComponent({
         unobserve = undefined
         if (props.lazy) {
           unobserve = observeIntersection(
-            imageRef.value,
+            selfRef.value,
             props.intersectionObserverOptions,
             shouldStartLoadingRef
           )
@@ -229,7 +235,6 @@ export default defineComponent({
       onRender: themeClassHandle?.onRender,
       hasLoadError: hasLoadErrorRef,
       handleError,
-      imageRef,
       shouldStartLoading: shouldStartLoadingRef,
       loaded: loadedRef,
       mergedOnLoad: (e: Event) => {
@@ -248,13 +253,23 @@ export default defineComponent({
       onRender,
       mergedOnLoad,
       shouldStartLoading,
-      loaded
+      loaded,
+      hasLoadError
     } = this
     onRender?.()
     let img: VNodeChild
-    const placeholderNode = this.$slots.placeholder?.()
+    const placeholderNode =
+      !loaded &&
+      !hasLoadError &&
+      (this.renderPlaceholder
+        ? this.renderPlaceholder()
+        : this.$slots.placeholder?.())
     if (this.hasLoadError) {
-      img = <img src={this.fallbackSrc} style={{ objectFit: this.objectFit }} />
+      img = this.renderFallback
+        ? this.renderFallback()
+        : resolveSlot($slots.fallback, () => [
+            <img src={this.fallbackSrc} style={{ objectFit: this.objectFit }} />
+        ])
     } else {
       img = resolveWrappedSlot($slots.default, (children) => {
         if (children) {
@@ -271,8 +286,7 @@ export default defineComponent({
           )
         } else if (src) {
           return h('img', {
-            loading: lazy ? 'lazy' : 'eager',
-            ref: 'imageRef',
+            loading: isImageSupportNativeLazy && lazy ? 'lazy' : 'eager',
             src: isImageSupportNativeLazy
               ? src
               : shouldStartLoading || loaded
@@ -283,8 +297,13 @@ export default defineComponent({
             onError: this.handleError,
             style: [
               { objectFit: this.objectFit },
-              placeholderNode && !loaded
-                ? { height: '0', width: '0', visibility: 'hidden' }
+              placeholderNode
+                ? {
+                    height: '0',
+                    width: '0',
+                    visibility: 'hidden',
+                    position: 'absolute'
+                  }
                 : ''
             ]
           })
@@ -298,7 +317,7 @@ export default defineComponent({
         style={this.cssVars as any}
       >
         {img}
-        {lazy && !loaded && placeholderNode}
+        {lazy && placeholderNode}
       </span>
     )
   }
